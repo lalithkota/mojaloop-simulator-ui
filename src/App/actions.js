@@ -47,7 +47,7 @@ export const unsetDfsps = createAction(UNSET_DFSPS);
 
 export const initApp = () => async (dispatch, getState) => {
   dispatch(setAppLoading());
-  dispatch(push("/transfer"));
+  dispatch(push("/users"));
   dispatch(unsetAppLoading());
 };
 

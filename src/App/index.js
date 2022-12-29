@@ -24,7 +24,7 @@ import ErrorModal from "./ErrorModal";
 import "./App.css";
 import Navbar from "./Navbar";
 import Menu from "./Menu";
-// import Users from "./Users";
+import Users from "./Users";
 import Transfer from "./Transfer";
 import Settings from "./Settings";
 // TODO: Enable when ready
@@ -69,7 +69,7 @@ class App extends PureComponent {
           </div>
           <ScrollBox flex>
             <div id="app__views">
-              {/*<Route path="/users" component={Users} />*/}
+              <Route path="/users" component={Users} />
               <Route path="/transfer" component={Transfer} />
               <Route path="/settings" component={Settings} />
             </div>
