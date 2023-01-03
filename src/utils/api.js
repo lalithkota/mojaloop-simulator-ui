@@ -32,11 +32,9 @@ const handleError = (error, status, state) => {
 const services = {
   test: {
     getApplicationUrl: state => {
-      const { configurations, configurationId } = state.settings;
-      const [{ protocol, host, port, path }] = configurations.filter(
-        cfg => cfg.id === configurationId
-      );
-      return `${protocol}://${host}:${port}${path || ""}`;
+      const backendUrl = "process.env.BACKEND_TEST_URL";
+      console.log(`${backendUrl}`);
+      return `${backendUrl}`;
     },
     getApplicationHeaders: () => undefined,
     credentials: state => undefined,
@@ -47,7 +45,9 @@ const services = {
   },
   simulator: {
     getApplicationUrl: state => {
-      return "http://localhost:3002";
+      const backendUrl = "process.env.BACKEND_SIMULATOR_URL";
+      console.log(`${backendUrl}`);
+      return `${backendUrl}`;
     },
     getApplicationHeaders: () => {
       return undefined;
