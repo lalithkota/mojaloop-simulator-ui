@@ -19,5 +19,5 @@ RUN npm install
 
 EXPOSE 8080
 
-ENTRYPOINT [ "/app/server/entrypoint.sh" ]
+ENTRYPOINT [ "./entrypoint.sh" ]
 CMD [ "npm", "start" ]
