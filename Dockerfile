@@ -7,6 +7,7 @@ RUN npm install
 COPY ./ /app/
 
 # Adds the package version and commit hash 
+ENV NODE_ENV "production"
 RUN npm run build
 
 # Second part, copy the build and server the app using a node express server
@@ -18,4 +19,5 @@ RUN npm install
 
 EXPOSE 8080
 
+ENTRYPOINT [ "/app/server/entrypoint.sh" ]
 CMD [ "npm", "start" ]

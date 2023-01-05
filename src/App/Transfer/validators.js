@@ -28,7 +28,13 @@ const isUuid = createValidator(`Is a valid UUID`, v =>
 );
 
 const isIdType = createValidator(`Is a valid idType`, v =>
-  v ? ["MSISDN", "ACCOUNT_NO"].includes(v) : false
+  v ? [
+    "MSISDN",
+    "ACCOUNT_ID",
+    "IBAN",
+    "PERSONAL_ID",
+    "ALIAS"
+  ].includes(v) : false
 );
 
 export const getTransferRequestValidators = () => {
@@ -41,19 +47,11 @@ export const getTransferRequestValidators = () => {
       transactionType: createValidation([vd.isRequired]),
       from: {
         idType: createValidation([vd.isRequired, isIdType]),
-        idValue: createValidation([
-          vd.isRequired,
-          vd.isNum,
-          vd.isLongBetween(1, 128)
-        ])
+        idValue: createValidation([vd.isRequired])
       },
       to: {
         idType: createValidation([vd.isRequired, isIdType]),
-        idValue: createValidation([
-          vd.isRequired,
-          vd.isNum,
-          vd.isLongBetween(1, 128)
-        ])
+        idValue: createValidation([vd.isRequired])
       },
       amountType: createValidation([vd.isRequired]),
       amount: createValidation([vd.isRequired, vd.isNum]),

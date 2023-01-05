@@ -21,8 +21,20 @@ const ID_TYPES = [
     label: "MSISDN"
   },
   {
-    value: "ACCOUNT_NO",
-    label: "ACCOUNT_NO"
+    value: "ACCOUNT_ID",
+    label: "ACCOUNT_ID"
+  },
+  {
+    value: "IBAN",
+    label: "IBAN"
+  },
+  {
+    value: "PERSONAL_ID",
+    label: "PERSONAL_ID"
+  },
+  {
+    value: "ALIAS",
+    label: "ALIAS"
   }
 ];
 

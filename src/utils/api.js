@@ -47,6 +47,13 @@ const services = {
   },
   simulator: {
     getApplicationUrl: state => {
+      const { configurations, configurationId } = state.settings;
+      const [{ backendSimUrl }] = configurations.filter(
+        cfg => cfg.id === configurationId
+      );
+      if(backendSimUrl){
+        return backendSimUrl;
+      }
       return "http://localhost:3002";
     },
     getApplicationHeaders: () => {

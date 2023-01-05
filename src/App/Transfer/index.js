@@ -137,9 +137,9 @@ class Transfer extends PureComponent {
     return (
       <div id="transfer">
         <div className="transfer__runner__section">
-          <Title>Send</Title>
+          <Title>Transfers</Title>
 
-          <Title small>Editor</Title>
+          <Title small>Send/Receive</Title>
           <Tabs onSelect={onModeSelect} selected={isAdvancedMode ? 1 : 0}>
             <TabList>
               <Tab>Simple Mode</Tab>
@@ -203,6 +203,7 @@ class Transfer extends PureComponent {
           </div>
         </div>
 
+        <Title small>Transfers</Title>
         {transferResponse && (
           <TransferResponse
             response={transferResponse}

@@ -42,6 +42,18 @@ const initialConfigurationState = [
     path: ""
   }
 ];
+if (process.env.NODE_ENV === 'production'){
+  initialConfigurationState[0] = {
+    id: "00000000",
+    name: "default",
+    protocol: "__BACKEND_TEST_URL_PROTO__",
+    host: "__BACKEND_TEST_URL_HOST__",
+    port: "__BACKEND_TEST_URL_PORT__",
+    path: "__BACKEND_TEST_URL_PATH__",
+    backendSimUrl: "__BACKEND_SIM_URL__"
+  }
+}
+
 let configs = getItem("configurations");
 let configurationId = getItem("configurationId");
 
