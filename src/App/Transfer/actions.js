@@ -18,7 +18,9 @@
 import { createAction } from "redux-actions";
 import uuid from "uuid/v4";
 import api from "utils/api";
+import { is20x } from "utils/http";
 import { downloadFile } from "utils/html";
+import { showErrorToast } from "../actions";
 import { ID_TYPES } from "../Users/constants";
 import { CURRENCIES } from "../constants";
 import { OPERATIONS, QUOTE_TYPES } from "./constants";
@@ -29,6 +31,7 @@ export const TOGGLE_ALL_FIELDS = "Transfer / Toggle All Fields";
 export const SET_TRANSFER_LOADING = "Transfer / Set Is Loading";
 export const UNSET_TRANSFER_LOADING = "Transfer / Unset Is Loading";
 export const SET_TRANSFER_RESPONSE = "Transfer / Set Response";
+export const SET_TRANSFERS = "Transfer / Set Transfers";
 
 export const CHANGE_TYPE = "Transfer / change type";
 export const CHANGE_NAME = "Transfer / change name";
@@ -52,6 +55,7 @@ export const toggleAllFields = createAction(TOGGLE_ALL_FIELDS);
 export const setTransferLoading = createAction(SET_TRANSFER_LOADING);
 export const unsetTransferLoading = createAction(UNSET_TRANSFER_LOADING);
 export const setTransferResponse = createAction(SET_TRANSFER_RESPONSE);
+export const setTransfers = createAction(SET_TRANSFERS);
 
 export const changeName = createAction(CHANGE_NAME);
 export const changeOperation = createAction(CHANGE_OPERATION);
@@ -74,7 +78,8 @@ export const sendTransfer = () => async (dispatch, getState) => {
     api.scenarios.create({ body: scenario })
   );
   if (status === 200) {
-    dispatch(setTransferResponse(data));
+    // dispatch(setTransferResponse(data));
+    dispatch(retrieveTransfers());
   }
 };
 export const resetForm = () => dispatch => {
@@ -152,4 +157,34 @@ export const exportFormrandomize = () => (dispatch, getState) => {
   const transfer = getTransfer(getState());
   const jsonFile = JSON.stringify([transfer], null, 2);
   downloadFile(jsonFile, "scenarios.json");
+};
+
+export const retrieveTransfers = () => async (dispatch, getState) => {
+  const { data, status } = await dispatch(api.transfers.read());
+  if (is20x(status)) {
+    const parseName = value => {
+      if(value.displayName){
+        return value.displayName
+      } else {
+        return `${value.firstName} ${value.middleName} ${value.lastName}`
+      }
+    }
+    const dataReformed = data.map(value => {
+      return {
+        transferId: value.transferId,
+        to: parseName(value.to),
+        toIdType: value.to.idType,
+        toIdValue: value.to.idValue,
+        from: parseName(value.from),
+        fromIdType: value.from.idType,
+        fromIdValue: value.from.idValue,
+        amount: value.amount,
+        currency: value.currency,
+        creationTime: value.creationTime
+      }
+    })
+    dispatch(setTransfers(dataReformed));
+  } else {
+    dispatch(showErrorToast("Error fetching transfers"));
+  }
 };

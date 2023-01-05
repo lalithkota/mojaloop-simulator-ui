@@ -84,6 +84,10 @@ const endpoints = {
   quoteRequests: {
     service: services.simulator,
     url: () => `/quoterequests`
+  },
+  transfers: {
+    service: services.simulator,
+    url: "/transfers"
   }
 };
 

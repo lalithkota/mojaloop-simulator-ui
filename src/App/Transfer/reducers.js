@@ -25,6 +25,7 @@ import {
   SET_TRANSFER_LOADING,
   UNSET_TRANSFER_LOADING,
   SET_TRANSFER_RESPONSE,
+  SET_TRANSFERS,
   CHANGE_TYPE,
   CHANGE_NAME,
   CHANGE_OPERATION,
@@ -100,6 +101,10 @@ const Transfer = handleActions(
     [SET_TRANSFER_RESPONSE]: (state, action) => ({
       ...state,
       transferResponse: action.payload
+    }),
+    [SET_TRANSFERS]: (state, action) => ({
+      ...state,
+      transferList: action.payload
     }),
     [CHANGE_TYPE]: changeTransferField("type"),
     [CHANGE_NAME]: changeTransferField("name"),

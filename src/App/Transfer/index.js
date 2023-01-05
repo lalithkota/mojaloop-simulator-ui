@@ -19,6 +19,7 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import {
   Button,
+  DataList,
   Spinner,
   Tab,
   Tabs,
@@ -51,12 +52,14 @@ import {
   randomizeForm,
   exportFormrandomize,
   sendTransfer,
-  toggleAllFields
+  toggleAllFields,
+  retrieveTransfers,
 } from "./actions";
 import {
   getIsTransferLoading,
   getTransfer,
   getTransferResponse,
+  getTransfers,
   getIsSubmitEnabled,
   getIsSubmitPending,
   getIsAllFieldsVisible,
@@ -67,6 +70,7 @@ import {
 const stateProps = state => ({
   isTransferLoading: getIsTransferLoading(state),
   transfer: getTransfer(state),
+  transferList: getTransfers(state),
   transferResponse: getTransferResponse(state),
   isSubmitEnabled: getIsSubmitEnabled(state),
   isSubmitPending: getIsSubmitPending(state),
@@ -76,6 +80,7 @@ const stateProps = state => ({
 });
 
 const actionProps = dispatch => ({
+  onMount: () => dispatch(retrieveTransfers()),
   onNameChange: value => dispatch(changeName(value)),
   onOperationChange: value => dispatch(changeOperation(value)),
   onHomeTransactionIdChange: value => dispatch(changeHomeTransactionId(value)),
@@ -94,7 +99,8 @@ const actionProps = dispatch => ({
   onResetFormButtonClick: () => dispatch(resetForm()),
   onRandomizeFormButtonClick: () => dispatch(randomizeForm()),
   onExportFormButtonClick: () => dispatch(exportFormrandomize()),
-  onAllFieldsViewChange: () => dispatch(toggleAllFields())
+  onAllFieldsViewChange: () => dispatch(toggleAllFields()),
+  onRefreshTransfers: () => dispatch(retrieveTransfers()),
 });
 
 const TransferLoader = () => <Spinner center size="m" />;
@@ -107,6 +113,7 @@ class Transfer extends PureComponent {
     const {
       transfer,
       transferResponse,
+      transferList,
       validation,
       isSubmitEnabled,
       isSubmitPending,
@@ -132,8 +139,53 @@ class Transfer extends PureComponent {
       onRandomizeFormButtonClick,
       onExportFormButtonClick,
       onSendTransferClick,
-      onAllFieldsViewChange
+      onAllFieldsViewChange,
+      onRefreshTransfers
     } = this.props;
+
+    const transferListColumns = [
+      {
+        label: "Transfer Id",
+        key: "transferId"
+      },
+      {
+        label: "To",
+        key: "to"
+      },
+      {
+        label: "To Id Type",
+        key: "toIdType"
+      },
+      {
+        label: "To Id Value",
+        key: "toIdValue"
+      },
+      {
+        label: "From",
+        key: "from"
+      },
+      {
+        label: "From Id Type",
+        key: "fromIdType"
+      },
+      {
+        label: "From Id Value",
+        key: "fromIdValue"
+      },
+      {
+        label: "Amount",
+        key: "amount"
+      },
+      {
+        label: "Currency",
+        key: "currency"
+      },
+      {
+        label: "Transfer Time",
+        key: "creationTime"
+      }
+    ];
+
     return (
       <div id="transfer">
         <div className="transfer__runner__section">
@@ -204,20 +256,26 @@ class Transfer extends PureComponent {
         </div>
 
         <Title small>Transfers</Title>
-        {transferResponse && (
-          <TransferResponse
-            response={transferResponse}
-            name={transfer.name}
-            isAllFieldsVisible={isAllFieldsVisible}
-            onAllFieldsViewChange={onAllFieldsViewChange}
+        <div className="transfer__button__row">
+          <Button
+            className="transfer__button__item"
+            label="Refresh Transfers"
+            onClick={onRefreshTransfers}
           />
-        )}
+        </div>
+        <DataList
+          list={transferList}
+          columns={transferListColumns}
+        />
       </div>
     );
   }
 }
 
 class TransferWrapper extends PureComponent {
+  componentWillMount(){
+    this.props.onMount();
+  }
   render() {
     if (this.props.isTransferLoading) {
       return <TransferLoader />;
